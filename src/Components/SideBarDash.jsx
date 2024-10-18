@@ -8,7 +8,7 @@ const SideBarDash = () => {
         }
     };
     return (
-        <div className="flex flex-col h-full w-1/4 bg-green-600 text-white p-6">
+        <div className="flex flex-col h-screen w-1/4 bg-green-600 text-white p-6">
             <div className=" text-4xl font-bold">MindScan</div>
             <div className="mt-9 font-extrabold">
                 <p className="text-lg mt-2">Dr. Jane Doe</p>
