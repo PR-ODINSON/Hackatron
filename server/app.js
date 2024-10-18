@@ -1,6 +1,8 @@
 import express from 'express';
+import multer from 'multer'
 const app = express();
 import userModel from "./models/user.js"
+import patientModel from "./models/patient.js"
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import bcrypt from 'bcrypt';
@@ -60,6 +62,37 @@ app.post("/login", async (req, res) => {
         }
         else res.status(401).json({ message: "Something went wrong" });
     });
+});
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, '../uploads/');
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname);
+    }
+});
+const upload = multer({ storage: storage });
+
+app.post("/patients", upload.single('file'), async (req, res) => {
+    const { name, email, contact, age, gender, patientType, testType } = req.body;
+    const file = req.file ? req.file.filename : null;
+    try {
+        const newPatient = await patientModel.create({
+            name,
+            email,
+            contact,
+            age,
+            gender,
+            patientType,
+            testType,
+            file
+        });
+        res.status(201).json({ message: "Patient details saved successfully", patient: newPatient });
+    }
+    catch (error) {
+        res.status(500).json({ message: "Error saving patient details", error });
+    }
 });
 
 app.get("/logout", (req, res) => {

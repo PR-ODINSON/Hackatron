@@ -10,14 +10,47 @@ const Tests = () => {
     const [contact, setContact] = useState('');
     const [file, setFile] = useState(null);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('email', email);
+        formData.append('contact', contact);
+        formData.append('age', age);
+        formData.append('gender', gender);
+        formData.append('patientType', patientType);
+        formData.append('testType', testType);
+        if (file) {
+            formData.append('file', file);
+        }
+
+        for (let [key, value] of formData.entries()) {
+            console.log(key, value);
+        }
+
+        try {
+            const response = await fetch('/patients', {
+                method: 'POST',
+                body: formData,
+                credentials: 'include'
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                alert(data.message); 
+            } else {
+                alert(data.message); 
+            }
+        } catch (error) {
+            console.error("Error submitting patient details:", error);
+        }
     };
 
     return (
         <>
             <div className="flex justify-center items-center h-screen w-full montserrat">
-                <div className="bg-white p-8 flex justify-center items-center rounded-lg shadow-lg w-2/3">
+                <div className="bg-white p-6 flex justify-center items-center rounded-lg shadow-lg w-[75%]">
                     <form onSubmit={handleSubmit} className="w-full">
                         <div className="flex flex-wrap justify-between text-sm gap-4 w-full">
                             <div className="w-full">
@@ -28,6 +61,7 @@ const Tests = () => {
                                             type="radio"
                                             value="new"
                                             checked={patientType === 'new'}
+                                            name="patientType"
                                             onChange={() => setPatientType('new')}
                                         />
                                         New Patient
@@ -37,6 +71,7 @@ const Tests = () => {
                                             type="radio"
                                             value="existing"
                                             checked={patientType === 'existing'}
+                                            name="patientType"
                                             onChange={() => setPatientType('existing')}
                                         />
                                         Existing Patient
@@ -49,6 +84,7 @@ const Tests = () => {
                                     <input
                                         type="text"
                                         value={name}
+                                        name="name"
                                         onChange={(e) => setName(e.target.value)}
                                         className="input border-[1px] border-gray-300 outline-none px-3 py-1 rounded-md"
                                         placeholder="Enter name"
@@ -59,6 +95,7 @@ const Tests = () => {
                                     <label>Age:</label>
                                     <input
                                         type="number"
+                                        name="age"
                                         value={age}
                                         onChange={(e) => setAge(e.target.value)}
                                         className="input border-[1px] border-gray-300 outline-none px-3 py-1 rounded-md"
@@ -74,6 +111,7 @@ const Tests = () => {
                                     <input
                                         type="email"
                                         value={email}
+                                        name="email"
                                         onChange={(e) => setEmail(e.target.value)}
                                         className="input border-[1px] border-gray-300 outline-none px-3 py-1 rounded-md"
                                         placeholder="Enter email"
@@ -84,6 +122,7 @@ const Tests = () => {
                                     <label>Gender:</label>
                                     <select
                                         value={gender}
+                                        name="gender"
                                         onChange={(e) => setGender(e.target.value)}
                                         className="input border-[1px] border-gray-300 outline-none px-3 py-1 rounded-md"
                                         required
@@ -102,6 +141,7 @@ const Tests = () => {
                                     <input
                                         type="number"
                                         value={contact}
+                                        name="contact"
                                         onChange={(e) => setContact(e.target.value)}
                                         className="input border-[1px] border-gray-300 outline-none px-3 py-1 rounded-md"
                                         placeholder="Enter contact number"
@@ -114,6 +154,7 @@ const Tests = () => {
                                     <label>Test Type:</label>
                                     <select
                                         value={testType}
+                                        name="testType"
                                         onChange={(e) => setTestType(e.target.value)}
                                         className="input border-[1px] border-gray-300 outline-none px-3 py-1 rounded-md"
                                         required
@@ -129,7 +170,7 @@ const Tests = () => {
                                     <label>File Inclusion:</label>
                                     <input
                                         type="file"
-                                        value={file}
+                                        name="file"
                                         onChange={(e) => setFile(e.target.files[0])}
                                         className="input"
                                     />
