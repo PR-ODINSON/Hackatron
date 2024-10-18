@@ -1,8 +1,12 @@
-# React + Vite
+# MindScan 
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+To run the code, 
+(i)   Open terminal and in the folder address write -> cd ./server
+(ii)  Now you will be in server folder
+(iii) Now install nodemon -> npm i nodemon -g(this will install nodemon globally)
+(iv)  Write this command to run the server -> nodemon app
+(v)   Go in browswer and write http://localhost:3000/
 
-Currently, two official plugins are available:
+The website start.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+NOTE:- NodeJS, MongoDB Compass must be installed properly. If you face problem still refer any youtube video for correct installation
