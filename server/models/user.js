@@ -6,7 +6,11 @@ const userSchema = mongoose.Schema({
     name: String,
     email: String,
     password: String, 
-    license: String
+    license: String,
+    patients: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "patient"
+    }]
 });
 
 export default mongoose.model("user", userSchema);

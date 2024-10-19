@@ -10,7 +10,12 @@ const patientSchema = mongoose.Schema({
     gender: { type: String, required: true },
     patientType: { type: String, required: true },
     testType: { type: String, required: true },
-    file: { type: String, required: true } 
+    file: { type: String, required: true },
+    doctor: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user",
+        required: true
+    }]
 });
 
 export default mongoose.model("patient", patientSchema);

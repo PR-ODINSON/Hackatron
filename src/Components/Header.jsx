@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Link as ScrollLink } from 'react-scroll';
 import { useEffect, useState } from 'react'
+import { ToastContainer, toast } from 'react-toastify';
 import Home from './Home';
 import About from './About';
 import Contact from './Contact';
@@ -55,38 +56,39 @@ function App() {
 
     if (response.ok) {
       const result = await response.json();
-      console.log(result.message);
+      toast.success(result.message, { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined });
       navigate('/dashboard'); 
     } else {
       const error = await response.json();
-      console.error("Login failed", error.message); 
+      toast.error("Login failed: " + error.message, { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined }); 
     }
   };
 
   const handleRegisterSubmit = async (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
     const formData = new FormData(e.target);
-    const data = Object.fromEntries(formData); 
-    
-    const response = await fetch('/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data), 
-    });
-    console.log(response)
+    const data = Object.fromEntries(formData);
 
-    if (response.ok) {
+    try {
+      const response = await fetch('/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
       const result = await response.json();
-      console.log(result.message);
-      navigate('/dashboard'); 
-    } else {
-      const error = await response.json();
-      console.error("Registration failed", error.message); 
+      toast.success(result.message, { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined });
+      navigate('/dashboard');
+    } catch (error) {
+      toast.error("Registration failed: " + error.message, { position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined });
     }
   };
 
   return (
     <>
+      <ToastContainer />
       <div className="flex flex-col montserrat" >
         <header className="fixed w-full z-10 transition duration-500" data-aos="fade-down" data-aos-duration="1000">
           <nav className="container mx-auto px-10 py-[14px] flex justify-between items-center">

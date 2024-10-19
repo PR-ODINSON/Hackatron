@@ -1,6 +1,8 @@
 import express from 'express';
 import multer from 'multer'
 const app = express();
+import cors from 'cors';
+app.use(cors());
 import userModel from "./models/user.js"
 import patientModel from "./models/patient.js"
 import cookieParser from 'cookie-parser';
@@ -75,8 +77,27 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 app.post("/patients", upload.single('file'), async (req, res) => {
+    console.log(req.file)
     const { name, email, contact, age, gender, patientType, testType } = req.body;
     const file = req.file ? req.file.filename : null;
+
+    const token = req.cookies.token; // Get the token from cookies
+    if (!token) return res.status(401).json({ message: "Unauthorized: No token provided" });
+
+    let doctorEmail;
+    try {
+        const decoded = jwt.verify(token, "Sayantan"); // Verify the token
+        doctorEmail = decoded.email; // Get the doctor's email from the token
+    } catch (error) {
+        return res.status(401).json({ message: "Unauthorized: Invalid token", error: error });
+    }
+
+    // Find the doctor using the extracted email
+    const doctor = await userModel.findOne({ email: doctorEmail });
+    console.log(doctor);
+
+    if (!doctor) return res.status(404).json({ message: "Doctor not found" });
+
     try {
         const newPatient = await patientModel.create({
             name,
@@ -86,8 +107,11 @@ app.post("/patients", upload.single('file'), async (req, res) => {
             gender,
             patientType,
             testType,
-            file
+            file,
+            doctor: doctor._id
         });
+        doctor.patients.push(newPatient._id);
+        await doctor.save();
         res.status(201).json({ message: "Patient details saved successfully", patient: newPatient });
     }
     catch (error) {

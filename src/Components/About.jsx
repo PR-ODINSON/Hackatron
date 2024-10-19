@@ -52,11 +52,11 @@ const About = () => {
 
     if (response.ok) {
       const result = await response.json();
-      console.log(result.message);
+      alert(result.message);
       navigate('/dashboard');
     } else {
       const error = await response.json();
-      console.error("Login failed", error.message);
+      alert("Login failed", error.message);
     }
   };
 
@@ -73,11 +73,11 @@ const About = () => {
 
     if (response.ok) {
       const result = await response.json();
-      console.log(result.message);
+      alert(result.message);
       navigate('/dashboard');
     } else {
       const error = await response.json();
-      console.error("Registration failed", error.message);
+      alert("Registration failed", error.message);
     }
   };
 
