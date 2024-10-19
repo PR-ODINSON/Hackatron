@@ -76,7 +76,7 @@ const Tests = () => {
                 setTestType('');
                 setContact('');
                 setFile(null);
-                navigate('/recommendation', { state: { testType } });
+                navigate('/recommendation', { state: { testType, file } });
             } else {
                 alert('Error submitting patient data');
             }
